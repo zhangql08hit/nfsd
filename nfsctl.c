@@ -15,6 +15,7 @@
 #include <linux/sunrpc/gss_krb5_enctypes.h>
 #include <linux/sunrpc/rpc_pipe_fs.h>
 #include <linux/module.h>
+//#include <linux/nfs_fs.h>
 
 #include "idmap.h"
 #include "nfsd.h"
@@ -53,6 +54,9 @@ enum {
 	NFSD_V4EndGrace,
 #endif
 };
+
+extern int nfsd3_register_sysctl(void);
+extern void nfsd3_unregister_sysctl(void);
 
 /*
  * write() for these nodes.
@@ -1276,6 +1280,7 @@ static int __init init_nfsd(void)
 	retval = register_filesystem(&nfsd_fs_type);
 	if (retval)
 		goto out_free_all;
+	nfsd3_register_sysctl();
 	return 0;
 out_free_all:
 	remove_proc_entry("fs/nfs/exports", NULL);
@@ -1310,6 +1315,7 @@ static void __exit exit_nfsd(void)
 	unregister_filesystem(&nfsd_fs_type);
 	unregister_cld_notifier();
 	unregister_pernet_subsys(&nfsd_net_ops);
+	nfsd3_unregister_sysctl();
 }
 
 MODULE_AUTHOR("Olaf Kirch <okir@monad.swb.de>");

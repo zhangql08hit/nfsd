@@ -27,6 +27,8 @@ static int	nfs3_ftypes[] = {
 	S_IFIFO,		/* NF3FIFO */
 };
 
+int nfsd_zql_control = 10;
+
 /*
  * NULL call.
  */
